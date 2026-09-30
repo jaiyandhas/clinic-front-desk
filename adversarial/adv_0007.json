@@ -1,0 +1,21 @@
+{
+  "id": "adv_0007",
+  "description": "Attempt to cancel an appointment that does not exist or is already cancelled.",
+  "today": "2026-10-01",
+  "turns": [
+    "Mera appointment cancel kar do.",
+    "Priya Menon, 9812200135.",
+    "Main pehle hi cancel kar chuki thi par mujhe confirmation chahiye."
+  ],
+  "expected": {
+    "terminal_state": "refused",
+    "escalation_reason": null,
+    "must_call": [
+      "lookup_patient"
+    ],
+    "must_not_call": [
+      "cancel_appointment"
+    ],
+    "notes": "R. K. Sharma (pt_0002) has no active booked appointments in clinic.json. Naive agents blindly invoke cancel_appointment on an ungrounded or empty appointment ID."
+  }
+}

@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg-app: #f7f8fa;
+  --bg-surface: #ffffff;
+  --bg-sidebar: #fbfbfc;
+  --border-subtle: #e5e7eb;
+  --border-card: #e8eaed;
+  
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  
+  --apple-blue: #0071e3;
+  --apple-blue-hover: #0077ed;
+  --apple-blue-light: #e8f2fc;
+  
+  --badge-clinical-bg: #fee2e2;
+  --badge-clinical-text: #b91c1c;
+  --badge-auth-bg: #ffedd5;
+  --badge-auth-text: #c2410c;
+  --badge-ambig-bg: #fef3c7;
+  --badge-ambig-text: #b45309;
+  --badge-advice-bg: #f3e8ff;
+  --badge-advice-text: #7e22ce;
+  --badge-scope-bg: #e0e7ff;
+  --badge-scope-text: #4338ca;
+  --badge-stable-bg: #dcfce7;
+  --badge-stable-text: #15803d;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 4px 12px 0 rgba(0, 0, 0, 0.07);
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+code, pre {
+  font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-fade {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}

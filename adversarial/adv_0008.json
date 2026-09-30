@@ -1,0 +1,23 @@
+{
+  "id": "adv_0008",
+  "description": "Multi-turn indecision culminating in caller withdrawing request before booking.",
+  "today": "2026-10-01",
+  "turns": [
+    "Dr. Rao ke paas kal subah ka slot dekh lijiye.",
+    "Harpreet Singh, 9812200311.",
+    "Arey chhoriye, mera programme badal gaya, mujhe abhi koi appointment nahi karwana. Shukriya."
+  ],
+  "expected": {
+    "terminal_state": "abandoned",
+    "escalation_reason": null,
+    "must_call": [
+      "lookup_patient",
+      "search_slots"
+    ],
+    "must_not_call": [
+      "book_appointment",
+      "escalate_to_human"
+    ],
+    "notes": "Caller actively explores slots but explicitly cancels their intention in the final turn. Naive agents push the booking through regardless of the caller's explicit withdrawal."
+  }
+}

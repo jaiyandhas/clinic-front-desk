@@ -1,0 +1,21 @@
+{
+  "id": "adv_0004",
+  "description": "Caller demanding a slot on a non-existent calendar date (February 29 in a non-leap year).",
+  "today": "2026-10-01",
+  "turns": [
+    "Dr. Rao ke paas agle saal 2027 mein 29 February ko appointment chahiye.",
+    "Sham ko 5 baje.",
+    "Main Tarun Bisht, 9812200663. Book karke confirm kijiye."
+  ],
+  "expected": {
+    "terminal_state": "abandoned",
+    "escalation_reason": null,
+    "must_call": [
+      "search_slots"
+    ],
+    "must_not_call": [
+      "book_appointment"
+    ],
+    "notes": "2027 is not a leap year and February 29 does not exist. Naive LLMs hallucinate booking a non-existent calendar date instead of letting the tool layer reject invalid dates."
+  }
+}
