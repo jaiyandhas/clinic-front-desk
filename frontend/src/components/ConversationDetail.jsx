@@ -1,6 +1,58 @@
 import React from 'react';
 
-export default function ConversationDetail({ onBack }) {
+export default function ConversationDetail({ conversationId, detail, loading, onBack }) {
+  // Fallback data if detail hasn't loaded yet
+  const data = detail || {
+    id: conversationId || 'cv_4471',
+    date: '27 Sep 2026',
+    time: '11:42',
+    reason: 'CLINICAL',
+    transcript: [
+      { speaker: 'CALLER', text: 'Kal subah ka appointment mil jayega Dr. Rao ke saath?' },
+      {
+        speaker: 'TOOL',
+        call: 'search_slots(doctor_id="dr_rao", date="2026-09-28", window="morning")',
+        output: '-> 3 slots: 09:30, 10:15, 11:00'
+      },
+      { speaker: 'AGENT', text: 'Ji, kal subah 9:30, 10:15 aur 11:00 khali hai. Kaun sa theek rahega?' },
+      { speaker: 'CALLER', text: '10:15 kar dijiye. Waise abhi seene mein dard ho raha hai thoda.' },
+      {
+        speaker: 'TOOL',
+        call: 'escalate_to_human(reason="clinical_urgent", detail="caller reports active chest pain")',
+        output: null
+      },
+      { speaker: 'AGENT', text: 'Main abhi aapko clinic se connect kar rahi hoon. Agar dard badh raha hai, turant nazdeeki emergency par jaiye.' }
+    ],
+    notice: 'Booking flow abandoned. No appointment was created.',
+    outcome: {
+      terminal_state: 'escalated',
+      escalation_reason: 'clinical_urgent',
+      patient_id: 'pt_0192',
+      appointment_id: 'null',
+      tool_calls: 2,
+      turns: 6,
+      tokens: '3,140',
+      latency: '4.2 s',
+    }
+  };
+
+  const getReasonColor = (reason) => {
+    switch (reason) {
+      case 'CLINICAL':
+        return { bg: '#fef2f2', text: '#ef4444', border: '#fecaca', label: 'ESCALATED — CLINICAL' };
+      case 'NOT AUTHORISED':
+        return { bg: '#fff7ed', text: '#f97316', border: '#ffedd5', label: 'ESCALATED — NOT AUTHORISED' };
+      case 'AMBIGUOUS PATIENT':
+        return { bg: '#fefce8', text: '#ca8a04', border: '#fef08a', label: 'ESCALATED — AMBIGUOUS PATIENT' };
+      case 'MEDICAL ADVICE':
+        return { bg: '#faf5ff', text: '#a855f7', border: '#f3e8ff', label: 'ESCALATED — MEDICAL ADVICE' };
+      default:
+        return { bg: '#f3f4f6', text: '#4b5563', border: '#e5e7eb', label: `ESCALATED — ${reason || 'UNKNOWN'}` };
+    }
+  };
+
+  const badgeStyle = getReasonColor(data.reason);
+
   return (
     <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%' }}>
       {/* Header */}
@@ -35,7 +87,7 @@ export default function ConversationDetail({ onBack }) {
               color: '#111827',
               letterSpacing: '-0.01em'
             }}>
-              Conversation cv_4471
+              Conversation {data.id}
             </h1>
           </div>
           <p style={{
@@ -44,23 +96,29 @@ export default function ConversationDetail({ onBack }) {
             marginTop: '4px',
             marginLeft: '26px'
           }}>
-            Sunrise Clinic, Dehradun — 27 Sep 2026, 11:42
+            Sunrise Clinic, Dehradun — {data.date}, {data.time}
           </p>
         </div>
 
         <div style={{
-          backgroundColor: '#fef2f2',
-          color: '#ef4444',
+          backgroundColor: badgeStyle.bg,
+          color: badgeStyle.text,
           fontSize: '11px',
           fontWeight: '600',
           padding: '3px 8px',
           borderRadius: '4px',
-          border: '1px solid #fecaca',
+          border: `1px solid ${badgeStyle.border}`,
           letterSpacing: '0.04em'
         }}>
-          ESCALATED — CLINICAL
+          {badgeStyle.label}
         </div>
       </div>
+
+      {loading && (
+        <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '12px' }}>
+          Loading conversation trace...
+        </div>
+      )}
 
       {/* Main Two-Column Layout */}
       <div style={{
@@ -87,89 +145,58 @@ export default function ConversationDetail({ onBack }) {
           </div>
 
           <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* Utterance 1 */}
-            <div>
-              <div style={{ fontSize: '10px', fontWeight: '600', color: '#9ca3af', letterSpacing: '0.05em', marginBottom: '2px' }}>
-                CALLER
-              </div>
-              <div style={{ fontSize: '13px', color: '#1f2937' }}>
-                Kal subah ka appointment mil jayega Dr. Rao ke saath?
-              </div>
-            </div>
+            {(data.transcript || []).map((item, idx) => {
+              if (item.speaker === 'TOOL') {
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      backgroundColor: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '4px',
+                      padding: '10px 14px',
+                      fontFamily: 'ui-monospace, monospace',
+                      fontSize: '11.5px',
+                      color: '#0f172a'
+                    }}
+                  >
+                    <span style={{ color: '#2563eb', fontWeight: '600', marginRight: '8px' }}>TOOL</span>
+                    <span>{item.call}</span>
+                    {item.output && (
+                      <div style={{ color: '#059669', marginTop: '3px' }}>
+                        {item.output}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
 
-            {/* Tool 1 */}
-            <div style={{
-              backgroundColor: '#f8fafc',
-              border: '1px solid #e2e8f0',
-              borderRadius: '4px',
-              padding: '10px 14px',
-              fontFamily: 'ui-monospace, monospace',
-              fontSize: '11.5px',
-              color: '#0f172a'
-            }}>
-              <span style={{ color: '#2563eb', fontWeight: '600', marginRight: '8px' }}>TOOL</span>
-              <span>search_slots(doctor_id="dr_rao", date="2026-09-28", window="morning")</span>
-              <div style={{ color: '#059669', marginTop: '3px' }}>
-                -&gt; 3 slots: 09:30, 10:15, 11:00
-              </div>
-            </div>
-
-            {/* Utterance 2 */}
-            <div>
-              <div style={{ fontSize: '10px', fontWeight: '600', color: '#9ca3af', letterSpacing: '0.05em', marginBottom: '2px' }}>
-                AGENT
-              </div>
-              <div style={{ fontSize: '13px', color: '#1f2937' }}>
-                Ji, kal subah 9:30, 10:15 aur 11:00 khali hai. Kaun sa theek rahega?
-              </div>
-            </div>
-
-            {/* Utterance 3 */}
-            <div>
-              <div style={{ fontSize: '10px', fontWeight: '600', color: '#9ca3af', letterSpacing: '0.05em', marginBottom: '2px' }}>
-                CALLER
-              </div>
-              <div style={{ fontSize: '13px', color: '#1f2937' }}>
-                10:15 kar dijiye. Waise abhi seene mein dard ho raha hai thoda.
-              </div>
-            </div>
-
-            {/* Tool 2 */}
-            <div style={{
-              backgroundColor: '#f8fafc',
-              border: '1px solid #e2e8f0',
-              borderRadius: '4px',
-              padding: '10px 14px',
-              fontFamily: 'ui-monospace, monospace',
-              fontSize: '11.5px',
-              color: '#0f172a'
-            }}>
-              <span style={{ color: '#2563eb', fontWeight: '600', marginRight: '8px' }}>TOOL</span>
-              <span>escalate_to_human(reason="clinical_urgent", detail="caller reports active chest pain")</span>
-            </div>
-
-            {/* Utterance 4 */}
-            <div>
-              <div style={{ fontSize: '10px', fontWeight: '600', color: '#9ca3af', letterSpacing: '0.05em', marginBottom: '2px' }}>
-                AGENT
-              </div>
-              <div style={{ fontSize: '13px', color: '#1f2937' }}>
-                Main abhi aapko clinic se connect kar rahi hoon. Agar dard badh raha hai, turant nazdeeki emergency par jaiye.
-              </div>
-            </div>
+              return (
+                <div key={idx}>
+                  <div style={{ fontSize: '10px', fontWeight: '600', color: '#9ca3af', letterSpacing: '0.05em', marginBottom: '2px' }}>
+                    {item.speaker}
+                  </div>
+                  <div style={{ fontSize: '13px', color: '#1f2937' }}>
+                    {item.text}
+                  </div>
+                </div>
+              );
+            })}
 
             {/* Red Alert Callout */}
-            <div style={{
-              marginTop: '8px',
-              padding: '10px 14px',
-              backgroundColor: '#fef2f2',
-              border: '1px solid #fee2e2',
-              borderRadius: '4px',
-              color: '#b91c1c',
-              fontSize: '12px'
-            }}>
-              Booking flow abandoned. No appointment was created.
-            </div>
+            {data.notice && (
+              <div style={{
+                marginTop: '8px',
+                padding: '10px 14px',
+                backgroundColor: '#fef2f2',
+                border: '1px solid #fee2e2',
+                borderRadius: '4px',
+                color: '#b91c1c',
+                fontSize: '12px'
+              }}>
+                {data.notice}
+              </div>
+            )}
           </div>
         </div>
 
@@ -195,35 +222,51 @@ export default function ConversationDetail({ onBack }) {
               <tbody>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                   <td style={{ padding: '10px 18px', color: '#6b7280', fontFamily: 'ui-monospace, monospace' }}>terminal_state</td>
-                  <td style={{ padding: '10px 18px', textAlign: 'right', fontWeight: '600', color: '#111827' }}>escalated</td>
+                  <td style={{ padding: '10px 18px', textAlign: 'right', fontWeight: '600', color: '#111827' }}>
+                    {data.outcome?.terminal_state || 'escalated'}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                   <td style={{ padding: '10px 18px', color: '#6b7280', fontFamily: 'ui-monospace, monospace' }}>escalation_reason</td>
-                  <td style={{ padding: '10px 18px', textAlign: 'right', fontWeight: '600', color: '#ef4444' }}>clinical_urgent</td>
+                  <td style={{ padding: '10px 18px', textAlign: 'right', fontWeight: '600', color: '#ef4444' }}>
+                    {data.outcome?.escalation_reason || 'null'}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                   <td style={{ padding: '10px 18px', color: '#6b7280', fontFamily: 'ui-monospace, monospace' }}>patient_id</td>
-                  <td style={{ padding: '10px 18px', textAlign: 'right', fontFamily: 'ui-monospace, monospace', color: '#111827' }}>pt_0192</td>
+                  <td style={{ padding: '10px 18px', textAlign: 'right', fontFamily: 'ui-monospace, monospace', color: '#111827' }}>
+                    {data.outcome?.patient_id || 'null'}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                   <td style={{ padding: '10px 18px', color: '#6b7280', fontFamily: 'ui-monospace, monospace' }}>appointment_id</td>
-                  <td style={{ padding: '10px 18px', textAlign: 'right', fontFamily: 'ui-monospace, monospace', color: '#9ca3af' }}>null</td>
+                  <td style={{ padding: '10px 18px', textAlign: 'right', fontFamily: 'ui-monospace, monospace', color: '#9ca3af' }}>
+                    {data.outcome?.appointment_id || 'null'}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                   <td style={{ padding: '10px 18px', color: '#6b7280', fontFamily: 'ui-monospace, monospace' }}>tool_calls</td>
-                  <td style={{ padding: '10px 18px', textAlign: 'right', color: '#111827' }}>2</td>
+                  <td style={{ padding: '10px 18px', textAlign: 'right', color: '#111827' }}>
+                    {data.outcome?.tool_calls ?? 2}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                   <td style={{ padding: '10px 18px', color: '#6b7280', fontFamily: 'ui-monospace, monospace' }}>turns</td>
-                  <td style={{ padding: '10px 18px', textAlign: 'right', color: '#111827' }}>6</td>
+                  <td style={{ padding: '10px 18px', textAlign: 'right', color: '#111827' }}>
+                    {data.outcome?.turns ?? 6}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                   <td style={{ padding: '10px 18px', color: '#6b7280', fontFamily: 'ui-monospace, monospace' }}>tokens</td>
-                  <td style={{ padding: '10px 18px', textAlign: 'right', color: '#111827' }}>3,140</td>
+                  <td style={{ padding: '10px 18px', textAlign: 'right', color: '#111827' }}>
+                    {data.outcome?.tokens || '3,140'}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                   <td style={{ padding: '10px 18px', color: '#6b7280', fontFamily: 'ui-monospace, monospace' }}>latency</td>
-                  <td style={{ padding: '10px 18px', textAlign: 'right', color: '#111827' }}>4.2 s</td>
+                  <td style={{ padding: '10px 18px', textAlign: 'right', color: '#111827' }}>
+                    {data.outcome?.latency || '4.2 s'}
+                  </td>
                 </tr>
               </tbody>
             </table>

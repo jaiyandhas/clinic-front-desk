@@ -1,54 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function HandoffQueue({ onSelectConversation }) {
-  const [handoffs, setHandoffs] = useState([
-    {
-      id: 'cv_4471',
-      caller_said: '"Seene mein dard ho raha hai"',
-      reason: 'CLINICAL',
-      reasonColor: { bg: '#fef2f2', text: '#ef4444', border: '#fecaca' },
-      time: '11:42',
-      status: 'open'
-    },
-    {
-      id: 'cv_4468',
-      caller_said: 'Cancel for a different patient',
-      reason: 'NOT AUTHORISED',
-      reasonColor: { bg: '#fff7ed', text: '#f97316', border: '#ffedd5' },
-      time: '11:20',
-      status: 'open'
-    },
-    {
-      id: 'cv_4463',
-      caller_said: '"Sharma ji ke liye" — 3 matches',
-      reason: 'AMBIGUOUS PATIENT',
-      reasonColor: { bg: '#fefce8', text: '#ca8a04', border: '#fef08a' },
-      time: '10:57',
-      status: 'open'
-    },
-    {
-      id: 'cv_4455',
-      caller_said: '"Ye dawai lun ya nahi?"',
-      reason: 'MEDICAL ADVICE',
-      reasonColor: { bg: '#faf5ff', text: '#a855f7', border: '#f3e8ff' },
-      time: '10:18',
-      status: 'open'
-    }
-  ]);
-
+export default function HandoffQueue({ kpis, onSelectConversation }) {
+  const [handoffs, setHandoffs] = useState([]);
   const [resolvedIds, setResolvedIds] = useState(new Set());
 
-  const handleResolve = (e, id) => {
+  // Fetch live handoffs from backend
+  useEffect(() => {
+    fetch('http://localhost:8000/api/handoffs')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const formatted = data.map(h => {
+            let reasonColor = { bg: '#fef2f2', text: '#ef4444', border: '#fecaca' };
+            if (h.reason === 'NOT AUTHORISED') {
+              reasonColor = { bg: '#fff7ed', text: '#f97316', border: '#ffedd5' };
+            } else if (h.reason === 'AMBIGUOUS PATIENT') {
+              reasonColor = { bg: '#fefce8', text: '#ca8a04', border: '#fef08a' };
+            } else if (h.reason === 'MEDICAL ADVICE') {
+              reasonColor = { bg: '#faf5ff', text: '#a855f7', border: '#f3e8ff' };
+            }
+            return {
+              ...h,
+              reasonColor
+            };
+          });
+          setHandoffs(formatted);
+        }
+      })
+      .catch(err => console.error('Failed to fetch handoffs:', err));
+  }, []);
+
+  const handleResolve = async (e, id) => {
     e.stopPropagation();
-    setResolvedIds(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+    try {
+      await fetch('http://localhost:8000/api/resolve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ handoff_id: id, resolution_notes: 'Resolved by receptionist' })
+      });
+      setResolvedIds(prev => {
+        const next = new Set(prev);
+        next.add(id);
+        return next;
+      });
+    } catch (err) {
+      console.error('Resolve failed:', err);
+    }
   };
 
-  const openCount = handoffs.length - resolvedIds.size;
+  const openCount = kpis ? kpis.escalated_open - (resolvedIds.size > 0 ? resolvedIds.size : 0) : handoffs.length - resolvedIds.size;
 
   return (
     <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%' }}>
