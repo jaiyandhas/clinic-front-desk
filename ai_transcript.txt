@@ -1,0 +1,16 @@
+Prompt 1:
+our assignment
+Files for this assignment swasthiq-front-desk-agent-starter-pack.zip
+SwasthiQ-Hiring-Assignment-September2026.pdf
+The Task: Build a Python REST API exposing a conversational agent with six tools over a clinic's schedule, plus a React frontend with the two screens shown in the UI Requirements section.
+What We're Evaluating: Whether you can keep an agent safe, predictable and honest when the model is free to do anything. Not how well you can prompt one.
+i have attached the pdf and the task i need to do, i need to stand out on what im gonna do. lets draft a plan
+
+Prompt 2:
+wait is there anything hidden to check if i use ai majorly?
+
+Prompt 3:
+they will most likely use AI to evaluate as well so i think we need to do something extra i everything to impress them. do you have any idea on that
+
+Prompt 4:
+lets do smooth apple like UI i think ui is given in the pdf but yeah lets start building
