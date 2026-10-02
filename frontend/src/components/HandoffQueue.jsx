@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, CheckCircle2, ShieldAlert, Sparkles } from 'lucide-react';
 
 export default function HandoffQueue({ onSelectConversation }) {
   const [handoffs, setHandoffs] = useState([
@@ -7,7 +6,7 @@ export default function HandoffQueue({ onSelectConversation }) {
       id: 'cv_4471',
       caller_said: '"Seene mein dard ho raha hai"',
       reason: 'CLINICAL',
-      reasonType: 'clinical',
+      reasonColor: { bg: '#fef2f2', text: '#ef4444', border: '#fecaca' },
       time: '11:42',
       status: 'open'
     },
@@ -15,7 +14,7 @@ export default function HandoffQueue({ onSelectConversation }) {
       id: 'cv_4468',
       caller_said: 'Cancel for a different patient',
       reason: 'NOT AUTHORISED',
-      reasonType: 'auth',
+      reasonColor: { bg: '#fff7ed', text: '#f97316', border: '#ffedd5' },
       time: '11:20',
       status: 'open'
     },
@@ -23,7 +22,7 @@ export default function HandoffQueue({ onSelectConversation }) {
       id: 'cv_4463',
       caller_said: '"Sharma ji ke liye" — 3 matches',
       reason: 'AMBIGUOUS PATIENT',
-      reasonType: 'ambiguous',
+      reasonColor: { bg: '#fefce8', text: '#ca8a04', border: '#fef08a' },
       time: '10:57',
       status: 'open'
     },
@@ -31,7 +30,7 @@ export default function HandoffQueue({ onSelectConversation }) {
       id: 'cv_4455',
       caller_said: '"Ye dawai lun ya nahi?"',
       reason: 'MEDICAL ADVICE',
-      reasonType: 'advice',
+      reasonColor: { bg: '#faf5ff', text: '#a855f7', border: '#f3e8ff' },
       time: '10:18',
       status: 'open'
     }
@@ -43,54 +42,36 @@ export default function HandoffQueue({ onSelectConversation }) {
     e.stopPropagation();
     setResolvedIds(prev => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   };
 
-  const getBadgeStyle = (type) => {
-    switch (type) {
-      case 'clinical':
-        return { backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fecaca' };
-      case 'auth':
-        return { backgroundColor: '#ffedd5', color: '#ea580c', border: '1px solid #fed7aa' };
-      case 'ambiguous':
-        return { backgroundColor: '#fef3c7', color: '#d97706', border: '1px solid #fde68a' };
-      case 'advice':
-        return { backgroundColor: '#f3e8ff', color: '#9333ea', border: '1px solid #e9d5ff' };
-      default:
-        return { backgroundColor: '#f3f4f6', color: '#4b5563', border: '1px solid #e5e7eb' };
-    }
-  };
-
-  const activeCount = handoffs.length - resolvedIds.size;
+  const openCount = handoffs.length - resolvedIds.size;
 
   return (
-    <div className="animate-fade" style={{ maxWidth: '1080px', margin: '0 auto', width: '100%' }}>
-      {/* Top Header */}
+    <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%' }}>
+      {/* Header */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: '28px'
+        marginBottom: '24px'
       }}>
         <div>
           <h1 style={{
-            fontSize: '24px',
+            fontSize: '20px',
             fontWeight: '600',
-            letterSpacing: '-0.02em',
-            color: 'var(--text-primary)',
-            marginBottom: '4px'
+            color: '#111827',
+            marginBottom: '4px',
+            letterSpacing: '-0.01em'
           }}>
             Handoff Queue
           </h1>
           <p style={{
-            fontSize: '13px',
-            color: 'var(--text-secondary)'
+            fontSize: '12px',
+            color: '#6b7280'
           }}>
             Sunrise Clinic, Dehradun — conversations the agent escalated
           </p>
@@ -98,252 +79,223 @@ export default function HandoffQueue({ onSelectConversation }) {
 
         <div style={{
           backgroundColor: '#eff6ff',
-          color: '#1d4ed8',
+          color: '#2563eb',
           fontSize: '11px',
           fontWeight: '600',
-          letterSpacing: '0.04em',
-          padding: '4px 10px',
-          borderRadius: '999px',
-          border: '1px solid #dbeafe',
-          textTransform: 'uppercase'
+          padding: '3px 8px',
+          borderRadius: '4px',
+          letterSpacing: '0.04em'
         }}>
-          {activeCount} OPEN
+          {openCount} OPEN
         </div>
       </div>
 
-      {/* KPI Counters Grid */}
+      {/* Counters Across Top */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: '16px',
-        marginBottom: '32px'
+        gap: '14px',
+        marginBottom: '28px'
       }}>
-        {/* Card 1 */}
+        {/* Box 1 */}
         <div style={{
-          backgroundColor: 'var(--bg-surface)',
-          padding: '20px 22px',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-card)',
-          boxShadow: 'var(--shadow-sm)'
+          backgroundColor: '#ffffff',
+          padding: '16px 18px',
+          borderRadius: '6px',
+          border: '1px solid #e5e7eb'
         }}>
           <div style={{
-            fontSize: '11px',
+            fontSize: '10px',
             fontWeight: '600',
-            letterSpacing: '0.06em',
-            color: 'var(--text-tertiary)',
+            letterSpacing: '0.05em',
+            color: '#9ca3af',
             textTransform: 'uppercase',
             marginBottom: '8px'
           }}>
             Conversations
           </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-            <span style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
-              37
-            </span>
-            <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>today</span>
+          <div style={{ fontSize: '28px', fontWeight: '600', color: '#111827', lineHeight: '1.1' }}>
+            37
+          </div>
+          <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '6px' }}>
+            today
           </div>
         </div>
 
-        {/* Card 2 */}
+        {/* Box 2 */}
         <div style={{
-          backgroundColor: 'var(--bg-surface)',
-          padding: '20px 22px',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-card)',
-          boxShadow: 'var(--shadow-sm)'
+          backgroundColor: '#ffffff',
+          padding: '16px 18px',
+          borderRadius: '6px',
+          border: '1px solid #e5e7eb'
         }}>
           <div style={{
-            fontSize: '11px',
+            fontSize: '10px',
             fontWeight: '600',
-            letterSpacing: '0.06em',
-            color: 'var(--text-tertiary)',
+            letterSpacing: '0.05em',
+            color: '#9ca3af',
             textTransform: 'uppercase',
             marginBottom: '8px'
           }}>
             Completed by Agent
           </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-            <span style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
-              31
-            </span>
-            <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>84%</span>
+          <div style={{ fontSize: '28px', fontWeight: '600', color: '#111827', lineHeight: '1.1' }}>
+            31
+          </div>
+          <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '6px' }}>
+            84%
           </div>
         </div>
 
-        {/* Card 3 */}
+        {/* Box 3 */}
         <div style={{
-          backgroundColor: 'var(--bg-surface)',
-          padding: '20px 22px',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-card)',
-          boxShadow: 'var(--shadow-sm)'
+          backgroundColor: '#ffffff',
+          padding: '16px 18px',
+          borderRadius: '6px',
+          border: '1px solid #e5e7eb'
         }}>
           <div style={{
-            fontSize: '11px',
+            fontSize: '10px',
             fontWeight: '600',
-            letterSpacing: '0.06em',
-            color: 'var(--text-tertiary)',
+            letterSpacing: '0.05em',
+            color: '#9ca3af',
             textTransform: 'uppercase',
             marginBottom: '8px'
           }}>
             Escalated
           </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-            <span style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
-              6
-            </span>
-            <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{activeCount} still open</span>
+          <div style={{ fontSize: '28px', fontWeight: '600', color: '#111827', lineHeight: '1.1' }}>
+            6
+          </div>
+          <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '6px' }}>
+            {openCount} still open
           </div>
         </div>
 
-        {/* Card 4 - Urgent */}
+        {/* Box 4 */}
         <div style={{
-          backgroundColor: 'var(--bg-surface)',
-          padding: '20px 22px',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-card)',
-          boxShadow: 'var(--shadow-sm)'
+          backgroundColor: '#ffffff',
+          padding: '16px 18px',
+          borderRadius: '6px',
+          border: '1px solid #e5e7eb'
         }}>
           <div style={{
-            fontSize: '11px',
+            fontSize: '10px',
             fontWeight: '600',
-            letterSpacing: '0.06em',
-            color: '#dc2626',
+            letterSpacing: '0.05em',
+            color: '#9ca3af',
             textTransform: 'uppercase',
             marginBottom: '8px'
           }}>
             Urgent
           </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-            <span style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.03em', color: '#dc2626' }}>
-              1
-            </span>
-            <span style={{ fontSize: '13px', color: '#dc2626' }}>clinical, unresolved</span>
+          <div style={{ fontSize: '28px', fontWeight: '600', color: '#111827', lineHeight: '1.1' }}>
+            1
+          </div>
+          <div style={{ fontSize: '11px', color: '#ef4444', marginTop: '6px' }}>
+            clinical, unresolved
           </div>
         </div>
       </div>
 
-      {/* Open Handoffs Table Card */}
+      {/* Open Handoffs Table */}
       <div style={{
-        backgroundColor: 'var(--bg-surface)',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-card)',
-        boxShadow: 'var(--shadow-card)',
+        backgroundColor: '#ffffff',
+        borderRadius: '6px',
+        border: '1px solid #e5e7eb',
         overflow: 'hidden'
       }}>
         <div style={{
-          padding: '18px 24px',
-          borderBottom: '1px solid var(--border-subtle)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          padding: '16px 20px',
+          borderBottom: '1px solid #f3f4f6',
+          fontSize: '13px',
+          fontWeight: '600',
+          color: '#111827'
         }}>
-          <h2 style={{
-            fontSize: '14px',
-            fontWeight: '600',
-            color: 'var(--text-primary)'
-          }}>
-            Open handoffs
-          </h2>
-          <span style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>
-            Click any row to inspect conversation trace
-          </span>
+          Open handoffs
         </div>
 
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr style={{
-              backgroundColor: '#fafbfc',
-              borderBottom: '1px solid var(--border-subtle)',
-              fontSize: '11px',
+              borderBottom: '1px solid #e5e7eb',
+              fontSize: '10px',
               fontWeight: '600',
               letterSpacing: '0.06em',
-              color: 'var(--text-secondary)',
+              color: '#9ca3af',
               textTransform: 'uppercase'
             }}>
-              <th style={{ padding: '12px 24px', width: '160px' }}>Conversation</th>
-              <th style={{ padding: '12px 24px' }}>Caller Said</th>
-              <th style={{ padding: '12px 24px', width: '180px' }}>Reason</th>
-              <th style={{ padding: '12px 24px', width: '90px' }}>Time</th>
-              <th style={{ padding: '12px 24px', width: '110px', textAlign: 'right' }}>Action</th>
+              <th style={{ padding: '10px 20px', width: '150px' }}>Conversation</th>
+              <th style={{ padding: '10px 20px' }}>Caller Said</th>
+              <th style={{ padding: '10px 20px', width: '170px' }}>Reason</th>
+              <th style={{ padding: '10px 20px', width: '80px' }}>Time</th>
+              <th style={{ padding: '10px 20px', width: '90px' }}></th>
             </tr>
           </thead>
           <tbody>
             {handoffs.map((row) => {
               const isResolved = resolvedIds.has(row.id);
-              const badgeStyle = getBadgeStyle(row.reasonType);
 
               return (
                 <tr
                   key={row.id}
                   onClick={() => onSelectConversation(row.id)}
                   style={{
-                    borderBottom: '1px solid var(--border-subtle)',
+                    borderBottom: '1px solid #f3f4f6',
                     cursor: 'pointer',
-                    transition: 'background-color 0.12s ease',
-                    opacity: isResolved ? 0.45 : 1,
-                    backgroundColor: 'transparent'
+                    fontSize: '12.5px',
+                    color: '#1f2937',
+                    opacity: isResolved ? 0.4 : 1,
+                    transition: 'background-color 0.1s ease'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#f9fafb'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   <td style={{
-                    padding: '16px 24px',
+                    padding: '14px 20px',
                     fontFamily: 'ui-monospace, monospace',
-                    fontSize: '13px',
-                    fontWeight: '600',
-                    color: 'var(--apple-blue)'
+                    fontSize: '12px',
+                    color: '#2563eb'
                   }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                      {row.id}
-                      <ArrowUpRight size={13} opacity={0.6} />
-                    </span>
+                    {row.id}
                   </td>
 
-                  <td style={{
-                    padding: '16px 24px',
-                    fontSize: '13px',
-                    color: 'var(--text-primary)'
-                  }}>
+                  <td style={{ padding: '14px 20px' }}>
                     {row.caller_said}
                   </td>
 
-                  <td style={{ padding: '16px 24px' }}>
+                  <td style={{ padding: '14px 20px' }}>
                     <span style={{
                       display: 'inline-block',
-                      fontSize: '11px',
+                      fontSize: '10px',
                       fontWeight: '600',
                       letterSpacing: '0.04em',
-                      padding: '3px 8px',
-                      borderRadius: '4px',
-                      ...badgeStyle
+                      padding: '2px 7px',
+                      borderRadius: '3px',
+                      backgroundColor: row.reasonColor.bg,
+                      color: row.reasonColor.text,
+                      border: `1px solid ${row.reasonColor.border}`
                     }}>
                       {row.reason}
                     </span>
                   </td>
 
-                  <td style={{
-                    padding: '16px 24px',
-                    fontSize: '13px',
-                    color: 'var(--text-secondary)'
-                  }}>
+                  <td style={{ padding: '14px 20px', color: '#6b7280' }}>
                     {row.time}
                   </td>
 
-                  <td style={{ padding: '16px 24px', textAlign: 'right' }}>
+                  <td style={{ padding: '14px 20px', textAlign: 'right' }}>
                     <button
                       onClick={(e) => handleResolve(e, row.id)}
                       style={{
-                        padding: '6px 14px',
-                        fontSize: '12px',
+                        padding: '4px 12px',
+                        fontSize: '11px',
                         fontWeight: '500',
-                        borderRadius: 'var(--radius-sm)',
-                        border: isResolved ? '1px solid #10b981' : '1px solid #0071e3',
-                        backgroundColor: isResolved ? '#ecfdf5' : '#0071e3',
-                        color: isResolved ? '#059669' : '#ffffff',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease',
-                        boxShadow: isResolved ? 'none' : '0 1px 2px rgba(0, 113, 227, 0.2)'
+                        borderRadius: '4px',
+                        border: 'none',
+                        backgroundColor: isResolved ? '#e5e7eb' : '#2563eb',
+                        color: isResolved ? '#6b7280' : '#ffffff',
+                        cursor: 'pointer'
                       }}
                     >
                       {isResolved ? 'Resolved' : 'Resolve'}

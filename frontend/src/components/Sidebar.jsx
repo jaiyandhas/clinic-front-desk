@@ -1,119 +1,117 @@
 import React from 'react';
-import { 
-  Inbox, 
-  MessageSquareText, 
-  ShieldAlert, 
-  Activity, 
-  Settings, 
-  Sparkles,
-  Stethoscope
-} from 'lucide-react';
 
 export default function Sidebar({ currentScreen, onSelectScreen }) {
-  const navItems = [
-    { id: 'queue', label: 'Handoff Queue', icon: Inbox, badge: '4' },
-    { id: 'detail', label: 'Conversation Detail', icon: MessageSquareText },
+  const icons = [
+    { id: 'queue', shape: 'diamond' },
+    { id: 'detail', shape: 'hexagon' },
+    { id: 'settings', shape: 'circle-dot' },
+    { id: 'logs', shape: 'circle' },
+    { id: 'more', shape: 'circle' },
   ];
 
   return (
     <aside style={{
-      width: '64px',
-      backgroundColor: 'var(--bg-sidebar)',
-      borderRight: '1px solid var(--border-subtle)',
+      width: '52px',
+      backgroundColor: '#ffffff',
+      borderRight: '1px solid #eef0f4',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      padding: '16px 0',
-      gap: '24px',
+      padding: '24px 0',
+      gap: '20px',
       flexShrink: 0,
       userSelect: 'none'
     }}>
-      {/* Clinic Logo Mark */}
-      <div 
-        title="Sunrise Clinic Front Desk"
+      {/* Subtle Sidebar Geometric Icons matching assignment screenshot */}
+      <button
+        onClick={() => onSelectScreen('queue')}
+        title="Handoff Queue"
         style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '10px',
-          background: 'linear-gradient(135deg, #0071e3 0%, #00c6ff 100%)',
+          width: '32px',
+          height: '32px',
+          borderRadius: '8px',
+          border: 'none',
+          backgroundColor: currentScreen === 'queue' ? '#f1f5f9' : 'transparent',
+          color: currentScreen === 'queue' ? '#334155' : '#94a3b8',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#ffffff',
-          boxShadow: '0 2px 6px rgba(0, 113, 227, 0.25)',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          padding: 0,
+          transition: 'all 0.15s ease'
         }}
       >
-        <Stethoscope size={20} strokeWidth={2.2} />
+        {/* Diamond / Square shape as in screenshot */}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+      </button>
+
+      <button
+        onClick={() => onSelectScreen('detail')}
+        title="Conversation Detail"
+        style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '8px',
+          border: 'none',
+          backgroundColor: currentScreen === 'detail' ? '#f1f5f9' : 'transparent',
+          color: currentScreen === 'detail' ? '#334155' : '#94a3b8',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          padding: 0,
+          transition: 'all 0.15s ease'
+        }}
+      >
+        {/* Chat / Detail shape */}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </button>
+
+      <div style={{
+        width: '18px',
+        height: '18px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#cbd5e1'
+      }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
       </div>
 
-      {/* Nav Icons */}
-      <nav style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-        width: '100%',
-        alignItems: 'center'
-      }}>
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = currentScreen === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => onSelectScreen(item.id)}
-              title={item.label}
-              style={{
-                position: 'relative',
-                width: '42px',
-                height: '42px',
-                borderRadius: '10px',
-                border: 'none',
-                background: isActive ? '#e8f2fc' : 'transparent',
-                color: isActive ? 'var(--apple-blue)' : 'var(--text-secondary)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <Icon size={20} strokeWidth={isActive ? 2.4 : 1.8} />
-              {item.badge && (
-                <span style={{
-                  position: 'absolute',
-                  top: '4px',
-                  right: '4px',
-                  width: '8px',
-                  height: '8px',
-                  backgroundColor: '#ef4444',
-                  borderRadius: '50%',
-                  border: '1.5px solid #ffffff'
-                }} />
-              )}
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* Footer System Status */}
       <div style={{
-        marginTop: 'auto',
+        width: '18px',
+        height: '18px',
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
-        gap: '14px'
+        justifyContent: 'center',
+        color: '#cbd5e1'
       }}>
-        <div 
-          title="Deterministic Safety Guardrail Active"
-          style={{
-            width: '10px',
-            height: '10px',
-            borderRadius: '50%',
-            backgroundColor: '#10b981',
-            boxShadow: '0 0 0 3px rgba(16, 185, 129, 0.2)'
-          }}
-        />
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="8"></circle>
+        </svg>
+      </div>
+
+      <div style={{
+        width: '18px',
+        height: '18px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#cbd5e1'
+      }}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="8"></circle>
+        </svg>
       </div>
     </aside>
   );
