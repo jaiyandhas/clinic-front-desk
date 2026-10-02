@@ -4,7 +4,16 @@ A production-grade, deterministic conversational agent and dual-screen React fro
 
 ---
 
-## Quick Start (One Command To Run)
+## Live Deployments
+
+- **Live Production Frontend (Vercel)**: [https://clinic-front-desk-dun.vercel.app](https://clinic-front-desk-dun.vercel.app)
+- **Live Backend API (Render)**: [https://clinic-front-desk-api.onrender.com](https://clinic-front-desk-api.onrender.com)
+- **Interactive Swagger Documentation**: [https://clinic-front-desk-api.onrender.com/docs](https://clinic-front-desk-api.onrender.com/docs)
+- **API Contract Endpoint**: `POST https://clinic-front-desk-api.onrender.com/agent/run`
+
+---
+
+## Quick Start (Local Run)
 
 Run both the FastAPI backend and React frontend with a single command:
 
@@ -12,9 +21,9 @@ Run both the FastAPI backend and React frontend with a single command:
 ./run.sh
 ```
 
-- **Frontend (Apple-style UI)**: [http://localhost:3000](http://localhost:3000)
-- **Backend API Contract Endpoint**: [http://localhost:8000/agent/run](http://localhost:8000/agent/run)
-- **Interactive Swagger Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Local Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Local API Contract**: [http://localhost:8000/agent/run](http://localhost:8000/agent/run)
+- **Local Interactive Swagger**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 

@@ -1,19 +1,17 @@
-# Deployment Guide
-
-This guide explains how to deploy the repository to obtain a publicly hosted live link for submission requirement #2.
+# Production Deployment Links
+- **Live Frontend (Vercel)**: [https://clinic-front-desk-dun.vercel.app](https://clinic-front-desk-dun.vercel.app)
+- **Live Backend API (Render)**: [https://clinic-front-desk-api.onrender.com](https://clinic-front-desk-api.onrender.com)
+- **Swagger Documentation**: [https://clinic-front-desk-api.onrender.com/docs](https://clinic-front-desk-api.onrender.com/docs)
+- **Contract Endpoint**: `POST https://clinic-front-desk-api.onrender.com/agent/run`
 
 ---
 
-## Option 1: Frontend on Vercel + Backend on Render (Recommended & Free)
+## Deployment Architecture
 
-### Step 1: Push Repository to Public GitHub
-1. Create a new public repository on GitHub (e.g. `swasthiq-clinic-front-desk`).
-2. Run:
-   ```bash
-   git remote add origin https://github.com/<your-username>/swasthiq-clinic-front-desk.git
-   git branch -M main
-   git push -u origin main
-   ```
+The system is deployed across two high-availability cloud platforms:
+1. **Frontend (Vercel)**: Hosted globally on Vercel's Edge Network, built with Vite and connected directly to the Render backend via `VITE_API_URL=https://clinic-front-desk-api.onrender.com`.
+2. **Backend API (Render)**: Hosted as a Python 3 Web Service running Uvicorn + FastAPI with CORS enabled and atomic in-memory transactional database isolation.
+
 
 ### Step 2: Deploy Backend to Render (Free Web Service)
 1. Go to [render.com](https://render.com) and create a **New Web Service**.
