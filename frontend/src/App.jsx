@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import HandoffQueue from './components/HandoffQueue';
 import ConversationDetail from './components/ConversationDetail';
+import { API_BASE_URL } from './config';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('queue'); // 'queue' or 'detail'
@@ -12,7 +13,7 @@ export default function App() {
 
   // Load KPIs on mount
   useEffect(() => {
-    fetch('http://localhost:8000/api/kpis')
+    fetch(`${API_BASE_URL}/api/kpis`)
       .then(res => res.json())
       .then(data => setKpis(data))
       .catch(err => console.error('Failed to load KPIs:', err));
@@ -24,7 +25,7 @@ export default function App() {
     setCurrentScreen('detail');
 
     try {
-      const res = await fetch(`http://localhost:8000/api/handoffs/${conversationId}`);
+      const res = await fetch(`${API_BASE_URL}/api/handoffs/${conversationId}`);
       if (res.ok) {
         const data = await res.json();
         setConversationDetail(data);

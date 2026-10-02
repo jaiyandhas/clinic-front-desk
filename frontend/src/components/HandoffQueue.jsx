@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
 export default function HandoffQueue({ kpis, onSelectConversation }) {
   const [handoffs, setHandoffs] = useState([]);
@@ -6,7 +7,7 @@ export default function HandoffQueue({ kpis, onSelectConversation }) {
 
   // Fetch live handoffs from backend
   useEffect(() => {
-    fetch('http://localhost:8000/api/handoffs')
+    fetch(`${API_BASE_URL}/api/handoffs`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
@@ -33,7 +34,7 @@ export default function HandoffQueue({ kpis, onSelectConversation }) {
   const handleResolve = async (e, id) => {
     e.stopPropagation();
     try {
-      await fetch('http://localhost:8000/api/resolve', {
+      await fetch(`${API_BASE_URL}/api/resolve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ handoff_id: id, resolution_notes: 'Resolved by receptionist' })
