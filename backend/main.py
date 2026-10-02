@@ -30,6 +30,21 @@ app.add_middleware(
 
 CONVERSATIONS_DIR = pathlib.Path(__file__).resolve().parent.parent / "swasthiq-front-desk-agent-starter-pack" / "conversations"
 
+@app.get("/")
+def root():
+    return {
+        "status": "healthy",
+        "service": "SwasthiQ Clinic Front Desk Agent API",
+        "clinic": "Sunrise Health Clinic, Dehradun",
+        "endpoints": {
+            "swagger_docs": "/docs",
+            "agent_run": "POST /agent/run",
+            "kpis": "GET /api/kpis",
+            "handoffs": "GET /api/handoffs"
+        }
+    }
+
+
 # In-memory store for frontend handoff queue and resolution state
 _handoff_store = [
     {
